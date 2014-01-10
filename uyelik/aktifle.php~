@@ -1,0 +1,29 @@
+<?php
+
+include ("fonksiyonlar.php");
+
+db_baglanti();
+
+// Urlden verileri al.
+
+$kullanici_id = $_REQUEST['id'];
+$akod = $_REQUEST['akod'];
+
+$sql = mysql_query("update kullanicilar SET aktiflik='1' where id='$kullanici_id' AND akod='$akod'");
+
+$sql2 = mysql_query("select * from kullanicilar where id='$kullanici_id' AND akod='$akod' AND aktiflik='1'");
+
+$kontrol = mysql_num_rows($sql2);
+
+if($kontrol == 0)
+{
+echo 'Hesabınız etkinleştirilemedi';
+}
+elseif($kontrol > 0)
+{
+echo 'Tebrikler üye olmayı başardınız.';
+
+include("index.php");
+
+}
+?>

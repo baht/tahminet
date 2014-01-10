@@ -1,0 +1,5 @@
+<?php
+$baglanti = mysql_connect("localhost","root","") or die ("baglanti yok");
+
+mysql_select_db("uyelik",$baglanti) or die ("Mysql veritabani yok");
+?>

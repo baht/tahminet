@@ -1,0 +1,34 @@
+<?php
+// Db bağlantısı
+function db_baglanti()
+{
+  $db_host = "localhost";
+  $db_kullanici = "root"; // Db kullanıcı adınız
+  $db_sifre = "";         // Db şifreniz
+  $db_adi = "uyelik";     // Db adınız
+
+  $baglanti = mysql_connect($db_host, $db_kullanici, $db_sifre);
+  mysql_select_db($db_adi, $baglanti);
+  
+  if(mysql_errno())
+  {
+    echo 'Veritabanına bağlanılamıyor ...';
+    exit;
+  }
+}
+
+// Rastgele sayı Oluştur.
+function rastgelesayi() {
+  $salt = "abchefghjkmnpqrstuvwxyz0123456789";
+  srand((double)microtime()*1000000);
+      $i = 0;
+      while ($i <= 7) {
+            $num = rand() % 33;
+            $tmp = substr($salt, $num, 1);
+            $pass = $pass . $tmp;
+            $i++;
+      }
+      return $pass;
+}
+
+?>

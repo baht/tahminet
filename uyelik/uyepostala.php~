@@ -1,0 +1,118 @@
+<?php
+
+include ("fonksiyonlar.php");
+
+// Bağlantı oluştur.
+
+db_baglanti();
+
+// Formdan verileri alalım.
+
+$ad = stripslashes($_POST['ad']);
+$kullanici = stripslashes($_POST['kullanici']);
+$sifre = stripslashes($_POST['sifre']);
+$sifre2 = stripslashes($_POST['sifre2']);
+$email = stripslashes($_POST['email']);
+$hakkinda = stripslashes($_POST['hakkinda']);
+
+// Form kontrolleri
+
+if((!$ad) || (!$kullanici) || (!$sifre) || (!$sifre2) || (!$email))
+{
+  echo '<font color="red">Gerekli bir bölümü boş bıraktınız.</font>';
+  if(!$ad)
+  {
+    echo '<font color="red">Ad soyadı boş bıraktınız.</font>';
+  }
+  if(!$kullanici)
+  {
+    echo '<font color="red">Kullanıcı adını boş bıraktınız.</font>';
+  }
+  if(!$sifre)
+  {
+    echo '<font color="red">Şifre alanını boş bıraktınız.</font>';
+  }
+  if(!$sifre2)
+  {
+    echo '<font color="red">Şifrenizi tekrar yazmadınız.</font>';
+  }
+  if($sifre != $sifre2)
+  {
+    echo '<font color="red">Şifreler uyuşmuyor.</font>';
+  }
+  if(!$email)
+  {
+    echo '<font color="red">Emaili alanını boş bıraktınız.</font>';
+  }
+  include("kayit.html");
+  exit;
+}
+// Yazılan kullanıcı adı veya email daha önce başkası tarafından alınmış mı?
+
+$email_kontrol = mysql_query("select email from kullanicilar where email='$email'");
+$kullanici_kontrol = mysql_query("select kullanici from kullanicilar where kullanici='$kullanici'");
+
+// Sonucu alalım
+$email_kontrol2 = mysql_num_rows($email_kontrol);
+$kullanici_kontrol2= mysql_num_rows($kullanici_kontrol);
+
+if(($email_kontrol2 > 0) || ($kullanici_kontrol2 > 0))
+{
+  echo '<font color="red">Hata oluştu.</font>';
+  
+  if($email_kontrol2 > 0)
+  {
+    echo '<font color="red">Bu email adresi zaten kullanılıyor.</font>';
+    unset($email);
+  }
+  if($kullanici_kontrol2 > 0)
+  {
+    echo '<font color="red">Bu kullanıcı adı zaten kullanılıyor.</font>';
+    unset($kullanici);
+  }
+    include("kayit.html");
+    exit;
+}
+
+$rastgele_sayi = rastgelesayi();
+$sifre2 = sha1($sifre);
+
+// Girilen Bilgileri Dbye yazdırıyoruz.
+
+$sql = "insert into kullanicilar (ad_soyad, kullanici, sifre, email, hakkinda, akod, kayit_tarih)
+values('$ad', '$kullanici', '$sifre2', '$email', '$hakkinda', '$rastgele_sayi', now())";
+$sql2 = mysql_query($sql);
+
+// Dbye yazdırırken bir hata oluşursa;
+
+if(!$sql2)
+{
+  echo 'Bir hata oluştu.Lütfen daha sonra tekrar deneyin.';
+}
+else
+{
+$kullanici_id = mysql_insert_id();
+
+// Kullanıcıya hesabını etkinleştirmesi için mail gönderiyoruz.
+
+$konu = "Üyelik Onayı";
+$mesaj = " Sayın $ad
+
+Üyelik işleminizi tamamlamak için aşağıdaki linke tıklayın ya da adres çubuğuna kopyalayın.
+
+Giriş Bilgileriniz;
+
+Kullanıcı adı: $kullanici
+Şifre: $sifre
+
+Teşekkürler.";
+
+mail($email, $konu, $mesaj, "From: Domain.com<admin@domain.com>");
+
+echo 'Kullanıcı bilgileriniz email adresinize gönderildi.Üyeliğizi onaylamak için lütfen email adresinizdeki
+    bağlantıya tıklayın.Aksi halde siteye giriş yapamazsınız .<br />';
+    
+echo 'Anasayfa için <a href="index.php">tıklayın</a>';
+
+}
+?>

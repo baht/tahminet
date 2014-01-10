@@ -1,0 +1,25 @@
+<?php
+
+require('db.php');
+
+$kullanici_adi		= $_POST['kullanici_adi'];
+$sifre 			= $_POST['sifre'];
+$sifre_md		= md5($sifre);
+
+if(!$kullanici_adi || !$sifre){
+	echo 'Lütfen eksik alanları doldurunuz.';
+}
+else{
+	$sorgu = mysql_query("SELECT * FROM uyeler WHERE kullaniciadi='$kullanici_adi' && sifre='$sifre_md'");
+	if(!mysql_affected_rows()){
+		echo 'Böyle bir üye bulunmamaktadır.';
+	}
+	else{
+		$_SESSION['login'] = true;
+		$_SESSION['kullanici_adi'] = $kullanici_adi;
+
+		header("location: /sayfalar/anasayfa.php");
+	}
+}
+
+?>

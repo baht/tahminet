@@ -1,0 +1,44 @@
+<?php
+include("fonksiyonlar.php");
+
+db_baglanti();
+
+$email = $_POST['email'];
+if(!$email)
+    {
+        echo "Lütfen kayıt olurken girdiğiniz mail adresini giriniz.";
+        include ("yeni_sifre.html");
+        exit();
+    }
+    // Email adresini kontrol et.
+    $email_kontrol = mysql_query("select * from kullanicilar where email='$email'");
+    $email_kontrol2 = mysql_num_rows($email_kontrol);
+if($email_kontrol2 == 0)
+  {
+    echo '<font color="red">Girdiğiniz email adresi kayıtlı değil.</font>';
+    unset($email);
+   include ("yeni_sifre.html");
+   exit();
+   }
+
+// Rastgele sayı üret
+$rastgele_sayi = rastgelesayi();
+// Rastgele üretilen sayıyı sha1 yap.
+$yeni_sifre = sha1($rastgele_sayi);
+
+// Sha1 olan şifreyi dbye kaydet, normal şifreyi maille kullanıcıya gönder.
+$sql = mysql_query("update kullanicilar set sifre='$yeni_sifre' where email='$email'");
+$konu = "Şifre hatırlatma";
+$mesaj = " Merhaba, bizden yeni şifre istemişsiniz.Buyrun
+
+Yeni şifreniz: $rastgele_sayi
+
+http://www.domain.com/
+
+Teşekkürler.";
+
+mail($email, $konu, $mesaj, "From: Domain.com<admin@domain.com>");
+
+echo 'Yeni şifreniz arzu ettiğiniz adrese gönderilmiştir.';
+
+?>

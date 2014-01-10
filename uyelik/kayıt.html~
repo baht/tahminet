@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>Kayıt ol</title>
+<style type="text/css">
+table {
+font-family: Arial;
+font-size: 9pt;
+}
+</style>
+</head>
+<body>
+<form action="uyepostala.php" method="post">
+<table border="0">
+<tr>
+<td>Ad Soyad: </td>
+<td><input type="text" name="ad"> *</td>
+</tr>
+
+<tr>
+<td>Kullanıcı adı: </td>
+<td><input type="text" name="kullanici"> *</td>
+</tr>
+
+<tr>
+<td>Şifre: </td>
+<td><input type="password" name="sifre"> *</td>
+</tr>
+
+<tr>
+<td>Şifre tekrar: </td>
+<td><input type="password" name="sifre2"> *</td>
+</tr>
+
+<tr>
+<td>Email: </td>
+<td><input type="text" name="email"> *</td>
+</tr>
+
+<tr>
+<td></td>
+<td><input type="submit" onclick="javascript:this.form.submit(); this.disabled=true; this.value='Gönderiliyor...';"> </td>
+</tr>
+
+</table>
+</body>
+</html>

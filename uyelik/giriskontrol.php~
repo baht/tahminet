@@ -1,0 +1,46 @@
+<?php
+@session_start();
+
+include("fonksiyonlar.php");
+
+db_baglanti();
+
+// Formdan verileri alıyoruz.
+$kullanici = addslashes($_POST['kullanici']);
+$sifre = addslashes($_POST['sifre']);
+
+// Form kontrolleri
+
+if((!$kullanici) || (!$sifre))
+{
+  echo '<font color="red">Lütfen tüm alanları doldurun.</font>';
+  include("index.php");
+}
+else
+{
+  //Parolayı sha1 olarak alıyoruz.
+$sifre2 = sha1($sifre);
+
+// Şimdi kullanıcı adı,şifre, aktif mi? kontrolü
+
+$sql = mysql_query("select * from kullanicilar where kullanici='$kullanici' and sifre='$sifre2' and aktiflik='1'");
+$sql2 = mysql_num_rows($sql);
+
+if ($sql2 > 0)
+{
+  while($yaz = mysql_fetch_array($sql))
+  {
+
+  $_SESSION['kullanici'] = $kullanici;
+  // Veritabanından kullanıcı seviyesini alıp, sessiona kaydediyoruz.
+  $_SESSION['kullanici_seviye'] = $yaz['kullanici_seviye'];
+
+  header("Location: index.php");
+}
+}
+else
+{
+  echo '<font color="red">Kullanıcı adı veya parola yanlış.Yada hesabınızı aktifleştirmediniz !</font>';
+}
+}
+?>

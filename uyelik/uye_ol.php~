@@ -1,0 +1,112 @@
+<?php
+
+require('db.php');
+
+$kullanici_adi		= trim($_POST['kullanici_adi']);
+$sifre 			= trim($_POST['sifre']);
+$sifre_md		= md5($sifre);
+$sifreuzunluk		= strlen($sifre);
+$sifre_tekrar 		= trim($_POST['sifre_tekrar']);
+$email 			= trim($_POST['email']);
+$takim			= trim($_POST['takim']);
+$isim			= trim($_POST['isim']);
+$soyad			= trim($_POST['soyad']);
+$dogumtarihi		= trim($_POST['dogumtarihi']);
+$dogumyeri		= trim($_POST['dogumyeri']);
+$evadresi		= trim($_POST['evadresi']);
+$isadresi		= trim($_POST['isadresi']);
+$telefon		= trim($_POST['telefon']);
+$telefonuzunluk 	= strlen($telefon);
+$sehir			= trim($_POST['sehir']);
+$cinsiyet		= trim($_POST['cinsiyet']);
+$email_kontrol 		= mysql_query("SELECT email FROM uyeler WHERE email='$email'");
+$kullaniciadi_kontrol 	= mysql_query("SELECT kullaniciadi FROM uyeler WHERE kullaniciadi='$kullanici_adi'");
+$email_kontrol2 	= mysql_num_rows($email_kontrol);
+$kullaniciadi_kontrol2 	= mysql_num_rows($kullaniciadi_kontrol); 
+
+// Boşluk kontrolü
+if(!$kullanici_adi || !$sifre || !$sifre_tekrar || !$email || !$isim || !$soyad || !$telefon || !$dogumtarihi){
+	echo 'Lütfen eksik alanları doldurunuz.';
+	echo '<br><br>10 saniye sonra tekrar üye olma paneline yönlendirileceksiniz...';
+	header("Refresh: 10; index.php");
+}
+else{
+	if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+		echo 'Lütfen geçerli bir email adresi giriniz.';
+		echo '<br><br>10 saniye sonra tekrar üye olma paneline yönlendirileceksiniz...';
+		header("Refresh: 10; index.php");
+	}
+	else{
+		if(($sifreuzunluk < 6 or $sifreuzunluk > 10)){
+			echo 'Şifrenizin uzunluğu minimum 6 maksimum 10 karakter olabilir.';
+			echo '<br><br>10 saniye sonra tekrar üye olma paneline yönlendirileceksiniz...';
+			header("Refresh: 10; index.php");
+		}
+		else{
+			if($sifre != $sifre_tekrar){
+				echo 'Şifreler Uyuşmuyor';
+				echo '<br><br>10 saniye sonra tekrar üye olma paneline yönlendirileceksiniz...';
+				header("Refresh: 10; index.php");
+			}
+			else{
+				if(($email_kontrol2 > 0) || ($kullaniciadi_kontrol2 > 0)){
+  					echo 'Hata oluştu.';
+					if(($email_kontrol2 > 0)){
+						echo 'Bu email adresi kullanılmaktadır.';
+						echo '<br><br>10 saniye sonra tekrar üye olma paneline yönlendirileceksiniz...';
+						header("Refresh: 10; index.php");
+						unset($email);
+					}
+					if(($kullaniciadi_kontrol2 > 0)){
+						echo 'Bu kullanıcı adı kullanılmaktadır.';
+						echo '<br><br>10 saniye sonra tekrar üye olma paneline yönlendirileceksiniz...';
+						header("Refresh: 10; index.php");
+						unset($kullanici_adi);
+					}
+					exit;
+				}
+				else{
+					if(($telefonuzunluk != 10)){
+						echo 'Lütfen telefon numaranızı 10 haneli giriniz.';
+						echo '<br><br>10 saniye sonra tekrar üye olma paneline yönlendirileceksiniz...';
+						header("Refresh: 10; index.php");
+					}
+					else{
+						if(($dogumtarihi >= 1996)){
+							echo '18 yaşından küçükler üye olamaz.';
+							echo '<br><br>10 saniye sonra tekrar üye olma paneline yönlendirileceksiniz...';
+							header("Refresh: 10; index.php");
+						}
+						else{
+							$kaydet = mysql_query("INSERT INTO uyeler SET
+								kullaniciadi 	= '$kullanici_adi',
+								sifre		= '$sifre_md',
+								email		= '$email',
+								isim		= '$isim',
+								soyad		= '$soyad',
+								sehir		= '$sehir',
+								cinsiyet	= '$cinsiyet',
+								takim		= '$takim',
+								dogumtarihi	= '$dogumtarihi',
+								dogumyeri	= '$dogumyeri',
+								evadresi	= '$evadresi',
+								isadresi	= '$isadresi',
+								telefon		= '$telefon'
+								");
+							if($kaydet){
+								echo 'Kayıt Tamamlandı.';
+								echo '<br><br>10 saniye sonra tekrar üye girişi paneline yönlendirileceksiniz...';
+								header("Refresh: 10; uye_girisi.php");
+							}
+							else{
+								echo 'Beklenmeyen bir sorun oluştu.';
+							}
+						}
+					}
+				}
+			}		
+		}
+	}	
+}
+
+?>

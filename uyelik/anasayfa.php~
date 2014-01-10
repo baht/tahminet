@@ -1,0 +1,48 @@
+<?php require('db.php'); ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0Transitional//EN" "http://www.w3.org/TR/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>Anasayfa</title>
+</head>
+<body background="arkaplan.jpg">
+<br><br><br>
+	<select name="fikstur">
+         <option value="1.hafta">1.hafta</option>
+         <option value="2.hafta">2.hafta</option>
+         <option value="3.hafta">3.hafta</option>
+         <option value="4.hafta">4.hafta</option>
+         <option value="5.hafta">5.hafta</option>
+         <option value="6.hafta">6.hafta</option>
+         <option value="7.hafta">7.hafta</option>
+         <option value="8.hafta">8.hafta</option>
+         <option value="9.hafta">9.hafta</option>
+         <option value="10.hafta">10.hafta</option>
+         <option value="11.hafta">11.hafta</option>
+         <option value="12.hafta">12.hafta</option>
+         <option value="13.hafta">13.hafta</option>
+         <option value="14.hafta">14.hafta</option>
+         <option value="15.hafta">15.hafta</option>
+         <option value="16.hafta">16.hafta</option>
+         <option value="17.hafta">17.hafta</option>
+         <option value="18.hafta">18.hafta</option>
+         <option value="19.hafta">19.hafta</option>
+         <option value="20.hafta">20.hafta</option>
+         <option value="21.hafta">21.hafta</option>
+         <option value="22.hafta">22.hafta</option>
+         <option value="23.hafta">23.hafta</option>
+         <option value="24.hafta">24.hafta</option>
+         <option value="25.hafta">25.hafta</option>
+         <option value="26.hafta">26.hafta</option>
+         <option value="27.hafta">27.hafta</option>
+         <option value="28.hafta">28.hafta</option>
+         <option value="29.hafta">29.hafta</option>
+         <option value="30.hafta">30.hafta</option>
+         <option value="31.hafta">31.hafta</option>
+         <option value="32.hafta">32.hafta</option>
+         <option value="33.hafta">33.hafta</option>
+         <option value="34.hafta">34.hafta</option>
+      </select>
+</body>
+</html>
+?>
